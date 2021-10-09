@@ -6,8 +6,6 @@ CXX= g++
 # -Wall turns on compiler warnings
 CPPFLAGS= -std=c++2a -Wall -I./include
 
-# Absolute path
-
 # Linker flags
 LINKERFLAG= -lm
 
