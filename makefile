@@ -18,7 +18,7 @@ OBJECTDIR:= build
 BINDIR:= bin
 
 SOURCES:= $(wildcard $(SOURCEDIR)/*.cpp)
-#INCLUDE:= $(wildcard $(INCLUDEDIR)/*.h)
+INCLUDE:= $(wildcard $(INCLUDEDIR)/*.h)
 OBJECTS:= $(SOURCES:$(SOURCEDIR)/%.cpp=$(OBJECTDIR)/%.o)
 TARGET:= run
 
@@ -28,7 +28,7 @@ all: $(TARGET)
 $(TARGET): $(OBJECTS)
 	${CXX} $^ -o $@
 
-$(OBJECTS): $(OBJECTDIR)/%.o: $(SOURCEDIR)/%.cpp
+$(OBJECTS): $(OBJECTDIR)/%.o: $(SOURCEDIR)/%.cpp $(wildcard $(INCLUDEDIR)/*.h)
 	$(CXX) $(CPPFLAGS) -c $< -o $@
 
 
