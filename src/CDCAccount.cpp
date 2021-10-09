@@ -82,7 +82,7 @@ std::vector<Transaction> process_csv(std::string file_path)
     std::string line;
     std::string value;
     std::string colname;
-    std::ifstream csvfile(file_path);
+    std::ifstream csvfile("statements/" + file_path + ".csv");
     std::vector<Transaction> transactions;
 
     if (!csvfile.is_open())

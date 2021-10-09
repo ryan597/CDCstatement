@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
     account.process_statement(csv_path);
 
     while(!condition){  // wait on user input before closing program
-        std::cout << "Please enter a command:\n"
+        std::cout << "\nPlease enter a command:\n"
             << "1: Check Balance\n"
             << "2: Check Investment\n"
             << "3: New Statement\n"
