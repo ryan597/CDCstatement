@@ -34,4 +34,4 @@ $(OBJECTS): $(OBJECTDIR)/%.o: $(SOURCEDIR)/%.cpp
 
 .PHONEY: clean
 clean:
-	rm -f $(OBJECTS) $()
+	rm -f $(OBJECTS) $(TARGET)
