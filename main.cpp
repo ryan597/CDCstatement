@@ -9,30 +9,47 @@
 class CDCAccount
 {
 private:
-    std::unordered_map<std::string, double> account_balance;
+    std::unordered_map<std::string, double> account_balance{};
+    std::unordered_map<std::string, double> earn_balance{};
+    double fiat_balance{};
+    double supercharger_balance{};
 
 public:
-    void read_statement(std::string file_path)
+    Statement statement;
+    void process_statement(std::string file_path)
     {
-        Statement statement;
-        /*
-        read_csv(file_path)
-        */
+        std::vector<std::pair<std::string, std::vector<std::string>>> transactions = read_csv(file_path);
+
     }
+    void deposit(){}
+    void purchase(){}
+    void top_up_card(){}
+    void cashback(){}
+    void earn_reward(){}
+    void stake_reward(){}
+    void stake_reimbursement(){}
+    void supercharger_reward(){}
+    void supercharger_deposit(){}
+    void supercharger_withdraw(){}
     void update_balance(std::string key, double value)
     {
         account_balance[key] = value;
     }
     void print_balance()
     {
+        std::cout << "-------------------------------------"
+                  << "Account Balance: \nCurrency: \tValue";
         for (auto const& [key, value]: account_balance){
             std::cout << key << ":\t"
                   << value << "\n";
         }
+        std::cout << "-------------------------------------"
+                  << "Earn Balance: \nCurrency: \tValue";
+
     }
 };
 
-
+/*
 struct Transaction
 {
     std::string timestamp;
@@ -46,36 +63,33 @@ struct Transaction
     double dollar_value;
     std::string kind;
 };
-
+*/
 
 struct Statement
 {
     std::string file_name;
     int length;
-    std::vector<Transaction> transactions;
+    //std::vector<Transaction> transactions;
 };
 
 
-Statement read_csv(std::string file_path)
+std::vector<std::pair<std::string, std::vector<std::string>>> read_csv(std::string file_path)
 {
-    Statement statement;
-
-    std::vector<std::string> row;
+    std::string line;
+    std::string value;
+    std::string colname;
     std::ifstream csvfile(file_path);
+    // Each column gets stored as a pair of its name and all its values
+    std::vector<std::pair<std::string, std::vector<std::string>>> transactions;
+
     if (!csvfile.is_open())
         std::cout << "Could not open CSV file\n";
-
-    std::string line;
-    std::string colname;
-    std::string value;
-    // each row is a vector of strings, pair each column name with its values
-    std::vector<std::pair<std::string, std::vector<std::string>>> rows;
 
     if (csvfile.good()){
         std::getline(csvfile, line);
         std::stringstream ss(line);
         while(std::getline(ss, colname, ',')){
-            rows.push_back({colname, std::vector<std::string>{}});
+            transactions.push_back({colname, std::vector<std::string>{}});
         }
     }
 
@@ -83,10 +97,17 @@ Statement read_csv(std::string file_path)
         std::stringstream ss(line);
         int colindex = 0;
         while(ss >> value){
-            rows.at(colindex).second.push_back(value);
+            transactions.at(colindex).second.push_back(value);
+            colindex++;
         }
     }
     csvfile.close();
+    return transactions;
+}
+
+Statement process_transactions()
+{
+    Statement statement;
     return statement;
 }
 
@@ -105,7 +126,7 @@ int main(int argc, char* argv[])
     bool condition {false};
 
     CDCAccount account;
-    account.read_statement(csv_path);
+    account.process_statement(csv_path);
 
     while(!condition){  // wait on user input before closing program
         std::cout << "Please enter a command:\n"
