@@ -34,4 +34,8 @@ $(OBJECTS): $(OBJECTDIR)/%.o: $(SOURCEDIR)/%.cpp $(wildcard $(INCLUDEDIR)/*.h)
 
 .PHONEY: clean
 clean:
-	rm -f $(OBJECTS) $(TARGET)
+	rm -f $(OBJECTS)
+
+.PHONEY: remove
+remove: clean
+	rm -f $(TARGET)
