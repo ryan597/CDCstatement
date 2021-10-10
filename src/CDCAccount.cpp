@@ -4,9 +4,6 @@
 #include <algorithm>
 #include "CDCAccount.h"
 
-std::string split_line(std::string line);
-std::vector<Transaction> process_csv(std::string file_path);
-
 
 void CDCAccount::process_transactions(std::vector<Transaction> transactions)
 {
@@ -22,39 +19,84 @@ void CDCAccount::process_transactions(std::vector<Transaction> transactions)
         std::unordered_map<std::string, int> lookup_kind({
             {"viban_deposit", 1},  // add to balance
             {"viban_purchase", 2}, // subtract balance
-            {"", 3},
+            {"", 3},  // transfer funds from _ to _
             {"viban_card_top_up", 4}  // card
         });
         int kind = lookup_kind[transaction.kind];
         switch (kind){
             case 1:
-            deposit(transaction.amount);
+                deposit(transaction);
+                break;
+            case 2:
+                purchase(transaction);
+                break;
+            case 3:
+                break;
+            case 4:
+                top_up_card(transaction);
+                break;
+            default:
+                std::cout << "Transaction not recognised: " << transaction.kind;
+                break;
         }
     }
 }
+
+
 void CDCAccount::process_statement(std::string file_path)
 {
     std::vector<Transaction> transactions = process_csv(file_path);
+    std::cout << "Description \tAmount \t\n"
+              << "=====================================\n";
     process_transactions(transactions);
+    std::cout << "=====================================\n\n";
 }
-void CDCAccount::deposit(double amount)
+
+
+void CDCAccount::deposit(Transaction transaction)
 {
-    fiat_balance += amount;
+    fiat_balance += transaction.amount;
     std::cout << fiat_balance << '\n';
 }
-void CDCAccount::purchase(){}
-void CDCAccount::top_up_card(){}
-void CDCAccount::cashback(){}
-void CDCAccount::earn_reward(){}
-void CDCAccount::stake_reward(){}
-void CDCAccount::stake_reimbursement(){}
-void CDCAccount::supercharger_reward(){}
-void CDCAccount::supercharger_deposit(){}
-void CDCAccount::supercharger_withdraw(){}
+
+
+void CDCAccount::purchase(Transaction transaction)
+{
+    fiat_balance -= transaction.amount;
+    std::cout << fiat_balance << '\n';
+}
+
+
+void CDCAccount::top_up_card(Transaction transaction){}
+
+
+void CDCAccount::cashback(Transaction transaction){}
+
+
+void CDCAccount::earn_reward(Transaction transaction){}
+
+
+void CDCAccount::stake_reward(Transaction transaction){}
+
+
+void CDCAccount::stake_reimbursement(Transaction transaction){}
+
+
+void CDCAccount::supercharger_reward(Transaction transaction){}
+
+
+void CDCAccount::supercharger_deposit(Transaction transaction){}
+
+
+void CDCAccount::supercharger_withdraw(Transaction transaction){}
+
+
 void CDCAccount::update_balance(std::string key, double value)
 {
     account_balance[key] = value;
 }
+
+
 void CDCAccount::print_balance()
 {
     std::cout << "-------------------------------------"
