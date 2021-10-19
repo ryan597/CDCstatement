@@ -20,7 +20,8 @@ void CDCAccount::process_transactions(std::vector<Transaction> transactions)
             {"viban_deposit", 1},  // add to balance
             {"viban_purchase", 2}, // subtract balance
             {"", 3},  // transfer funds from _ to _
-            {"viban_card_top_up", 4}  // card
+            {"viban_card_top_up", 4},  // card
+            {"supercharger_deposit", 5}
         });
         int kind = lookup_kind[transaction.kind];
         switch (kind){
@@ -119,6 +120,14 @@ std::string split_line(std::string line)
     return line;
 }
 
+int count_lines_in_file(std::string file_path)
+{
+    std::ifstream inFile(file_path);
+    int lines = std::count(std::istreambuf_iterator<char>(inFile), 
+        std::istreambuf_iterator<char>(), '\n');
+    return lines;
+}
+
 std::vector<Transaction> process_csv(std::string file_path)
 {
     std::string line;
@@ -126,6 +135,9 @@ std::vector<Transaction> process_csv(std::string file_path)
     std::string colname;
     std::ifstream csvfile("statements/" + file_path + ".csv");
     std::vector<Transaction> transactions;
+
+    int number_of_transactions = count_lines_in_file(file_path);
+    transactions.reserve(number_of_transactions);
 
     if (!csvfile.is_open())
         std::cout << "Could not open CSV file\n";
@@ -135,7 +147,7 @@ std::vector<Transaction> process_csv(std::string file_path)
     while(std::getline(csvfile, line)){
         line = split_line(line);
         std::stringstream ss(line);
-        transactions.push_back(transaction);
+        transactions.push_back(transaction);  // find a way to change to emplace
 
         ss >> transactions[index].timestamp;
         ss >> transactions[index].description;
